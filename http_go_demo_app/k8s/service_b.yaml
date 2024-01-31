@@ -1,0 +1,37 @@
+
+# k8s/service-b.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-b
+  namespace: goapp  
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service-b
+  template:
+    metadata:
+      labels:
+        app: service-b
+    spec:
+      containers:
+      - name: service-b
+        image: ghcr.io/alma-security/go_app_service_b:1
+        ports:
+        - containerPort: 8081
+      imagePullSecrets:
+      - name: ghcr.io
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-b
+  namespace: goapp 
+spec:
+  selector:
+    app: service-b
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8081
